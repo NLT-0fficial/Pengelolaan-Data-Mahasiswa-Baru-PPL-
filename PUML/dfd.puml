@@ -1,0 +1,20 @@
+@startuml DFD_Level_0
+title DFD Level 0 - Sistem Pengelolaan Data Mahasiswa
+
+actor Mahasiswa
+actor Admin
+
+rectangle "Sistem Pengelolaan\nData Mahasiswa" as Sistem
+
+database "Database\nMahasiswa" as DB
+
+Mahasiswa --> Sistem : Registrasi,\nLogin,\nLihat Profil
+Sistem --> Mahasiswa : Informasi Akun,\nData Profil
+
+Admin --> Sistem : Verifikasi Data,\nKelola Mahasiswa,\nCetak Laporan
+Sistem --> Admin : Laporan,\nData Mahasiswa
+
+Sistem --> DB : Simpan/Ubah Data
+DB --> Sistem : Data Mahasiswa
+
+@enduml

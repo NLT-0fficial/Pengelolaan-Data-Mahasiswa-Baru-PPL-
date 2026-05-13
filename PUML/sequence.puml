@@ -1,0 +1,24 @@
+@startuml Sequence_Diagram
+title Sequence Diagram - Registrasi Mahasiswa Baru
+
+actor Mahasiswa
+participant "Form Registrasi" as Form
+participant Sistem
+database Database
+
+Mahasiswa -> Form : Isi biodata registrasi
+Form -> Sistem : Kirim data registrasi
+
+Sistem -> Sistem : Validasi data
+
+alt Data valid
+    Sistem -> Database : Simpan data mahasiswa
+    Database --> Sistem : Data berhasil disimpan
+    Sistem --> Form : Registrasi berhasil
+    Form --> Mahasiswa : Tampilkan notifikasi berhasil
+else Data tidak valid
+    Sistem --> Form : Pesan error
+    Form --> Mahasiswa : Registrasi gagal
+end
+
+@enduml
