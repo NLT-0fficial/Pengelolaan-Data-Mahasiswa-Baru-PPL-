@@ -10,19 +10,19 @@
 
     <div>
 
-        <!-- Tambah -->
-        <button class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#tambahModal">
+        <button
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#tambahModal">
 
             <i class="fas fa-plus"></i>
             Tambah
 
         </button>
 
-        <!-- Cetak -->
+
         <a href="{{ url('/admin/mahasiswa/export') }}"
-           class="btn btn-success">
+        class="btn btn-success">
 
             <i class="fas fa-print"></i>
             Cetak
@@ -42,6 +42,41 @@
 
 <div class="card-body">
 
+
+<form
+method="GET"
+action="/admin/mahasiswa"
+class="mb-3">
+
+<div class="input-group">
+
+<input
+type="text"
+name="search"
+class="form-control"
+placeholder="Cari NIM, Nama, Email, Program Studi..."
+value="{{ request('search') }}">
+
+
+<div class="input-group-append">
+
+<button
+class="btn btn-primary"
+type="submit">
+
+<i class="fas fa-search"></i>
+Cari
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+
+
 <table class="table table-bordered table-striped">
 
 <thead>
@@ -52,6 +87,7 @@
 <th>NIM</th>
 <th>Nama</th>
 <th>Program Studi</th>
+<th>Semester</th>
 <th>Email</th>
 <th>Status</th>
 
@@ -63,9 +99,10 @@ Aksi
 
 </thead>
 
+
 <tbody>
 
-@foreach($mahasiswa as $mhs)
+@forelse($mahasiswa as $mhs)
 
 <tr>
 
@@ -77,11 +114,19 @@ Aksi
 
 <td>{{ $mhs->programStudi->nama_prodi }}</td>
 
+<td>
+
+Semester {{ $mhs->semester }}
+
+</td>
+
 <td>{{ $mhs->email }}</td>
 
 <td>{{ $mhs->status_akun }}</td>
 
+
 <td class="text-center">
+
 
 <button
 class="btn btn-warning btn-sm"
@@ -92,6 +137,7 @@ data-target="#edit{{ $mhs->id }}">
 Edit
 
 </button>
+
 
 
 <form
@@ -113,19 +159,24 @@ Hapus
 
 </form>
 
+
 </td>
 
 </tr>
 
 
-<!-- Modal Edit -->
 
-<div class="modal fade"
+
+<!-- MODAL EDIT -->
+
+<div
+class="modal fade"
 id="edit{{ $mhs->id }}">
 
 <div class="modal-dialog">
 
 <div class="modal-content">
+
 
 <form
 action="/admin/mahasiswa/update/{{ $mhs->id }}"
@@ -133,6 +184,7 @@ method="POST">
 
 @csrf
 @method('PUT')
+
 
 <div class="modal-header">
 
@@ -149,7 +201,10 @@ data-dismiss="modal">
 
 </div>
 
+
+
 <div class="modal-body">
+
 
 <div class="form-group">
 
@@ -159,9 +214,11 @@ data-dismiss="modal">
 type="text"
 name="nama"
 value="{{ $mhs->nama }}"
-class="form-control">
+class="form-control"
+required>
 
 </div>
+
 
 
 <div class="form-group">
@@ -172,9 +229,63 @@ class="form-control">
 type="email"
 name="email"
 value="{{ $mhs->email }}"
-class="form-control">
+class="form-control"
+required>
 
 </div>
+
+
+
+<div class="form-group">
+
+<label>Program Studi</label>
+
+<select
+name="program_studi_id"
+class="form-control">
+
+@foreach($programStudi as $prodi)
+
+<option
+value="{{ $prodi->id }}"
+{{ $mhs->program_studi_id==$prodi->id ? 'selected':'' }}>
+
+{{ $prodi->nama_prodi }}
+
+</option>
+
+@endforeach
+
+</select>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>Semester</label>
+
+<select
+name="semester"
+class="form-control">
+
+@for($i=1;$i<=14;$i++)
+
+<option
+value="{{ $i }}"
+{{ $mhs->semester==$i ? 'selected':'' }}>
+
+Semester {{ $i }}
+
+</option>
+
+@endfor
+
+</select>
+
+</div>
+
 
 
 <div class="form-group">
@@ -193,6 +304,7 @@ Aktif
 
 </option>
 
+
 <option
 value="Nonaktif"
 {{ $mhs->status_akun=='Nonaktif' ? 'selected':'' }}>
@@ -207,6 +319,7 @@ Nonaktif
 
 </div>
 
+
 <div class="modal-footer">
 
 <button
@@ -219,6 +332,7 @@ Update
 
 </div>
 
+
 </form>
 
 </div>
@@ -227,7 +341,23 @@ Update
 
 </div>
 
-@endforeach
+
+@empty
+
+<tr>
+
+<td
+colspan="8"
+class="text-center">
+
+Data tidak ditemukan
+
+</td>
+
+</tr>
+
+@endforelse
+
 
 </tbody>
 
@@ -239,20 +369,25 @@ Update
 
 
 
-<!-- Modal Tambah -->
 
-<div class="modal fade"
+
+<!-- MODAL TAMBAH -->
+
+<div
+class="modal fade"
 id="tambahModal">
 
 <div class="modal-dialog">
 
 <div class="modal-content">
 
+
 <form
 action="/admin/mahasiswa/store"
 method="POST">
 
 @csrf
+
 
 <div class="modal-header">
 
@@ -269,7 +404,10 @@ data-dismiss="modal">
 
 </div>
 
+
+
 <div class="modal-body">
+
 
 <div class="form-group">
 
@@ -277,11 +415,13 @@ data-dismiss="modal">
 
 <input
 type="text"
+id="nim"
 name="nim"
 class="form-control"
-required>
+readonly>
 
 </div>
+
 
 
 <div class="form-group">
@@ -297,6 +437,7 @@ required>
 </div>
 
 
+
 <div class="form-group">
 
 <label>Email</label>
@@ -308,6 +449,56 @@ class="form-control"
 required>
 
 </div>
+
+
+
+<div class="form-group">
+
+<label>Program Studi</label>
+
+<select
+id="programStudi"
+name="program_studi_id"
+class="form-control">
+
+@foreach($programStudi as $prodi)
+
+<option value="{{ $prodi->id }}">
+
+{{ $prodi->nama_prodi }}
+
+</option>
+
+@endforeach
+
+</select>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>Semester</label>
+
+<select
+name="semester"
+class="form-control">
+
+@for($i=1;$i<=14;$i++)
+
+<option value="{{ $i }}">
+
+Semester {{ $i }}
+
+</option>
+
+@endfor
+
+</select>
+
+</div>
+
 
 
 <div class="form-group">
@@ -336,6 +527,8 @@ Nonaktif
 
 </div>
 
+
+
 <div class="modal-footer">
 
 <button
@@ -348,6 +541,7 @@ Simpan
 
 </div>
 
+
 </form>
 
 </div>
@@ -355,5 +549,62 @@ Simpan
 </div>
 
 </div>
+
+
+@stop
+
+
+
+
+@section('js')
+
+<script>
+
+document.addEventListener(
+'DOMContentLoaded',
+function(){
+
+const prodi =
+document.getElementById(
+'programStudi'
+);
+
+if(prodi){
+
+function generateNim(){
+
+fetch(
+'/admin/generate-nim?program_studi_id='
++prodi.value
+)
+
+.then(
+response=>response.json()
+)
+
+.then(data=>{
+
+document
+.getElementById(
+'nim'
+)
+.value=data.nim;
+
+});
+
+}
+
+generateNim();
+
+prodi.addEventListener(
+'change',
+generateNim
+);
+
+}
+
+});
+
+</script>
 
 @stop

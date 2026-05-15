@@ -23,9 +23,15 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/login', [AuthController::class, 'loginForm']);
+Route::get(
+    '/login',
+    [AuthController::class, 'loginForm']
+);
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post(
+    '/login',
+    [AuthController::class, 'login']
+);
 
 
 /*
@@ -36,7 +42,12 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('admin')->group(function () {
 
-    // Dashboard
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
+
     Route::get(
         '/admin/dashboard',
         [AuthController::class, 'dashboard']
@@ -49,31 +60,37 @@ Route::middleware('admin')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    // Tampil data
+    // tampil data + search
     Route::get(
         '/admin/mahasiswa',
         [MahasiswaController::class, 'index']
     );
 
-    // Tambah
+    // generate nim otomatis
+    Route::get(
+        '/admin/generate-nim',
+        [MahasiswaController::class, 'generateNim']
+    );
+
+    // tambah
     Route::post(
         '/admin/mahasiswa/store',
         [MahasiswaController::class, 'store']
     );
 
-    // Edit
+    // edit
     Route::put(
         '/admin/mahasiswa/update/{id}',
         [MahasiswaController::class, 'update']
     );
 
-    // Hapus
+    // hapus
     Route::delete(
         '/admin/mahasiswa/delete/{id}',
         [MahasiswaController::class, 'destroy']
     );
 
-    // Export Excel
+    // export excel
     Route::get(
         '/admin/mahasiswa/export',
         [MahasiswaController::class, 'export']

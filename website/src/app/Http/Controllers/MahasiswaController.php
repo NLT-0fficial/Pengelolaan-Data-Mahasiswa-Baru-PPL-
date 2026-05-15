@@ -3,22 +3,87 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
+use App\Models\ProgramStudi;
 use App\Exports\MahasiswaExport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MahasiswaController extends Controller
 {
-    public function index()
+    /*
+    |--------------------------------------------------------------------------
+    | Tampil Data + Search
+    |--------------------------------------------------------------------------
+    */
+
+    public function index(Request $request)
     {
-        $mahasiswa =
-        Mahasiswa::with('programStudi')->get();
+        $keyword = $request->search;
+
+        $mahasiswa = Mahasiswa::with('programStudi')
+
+        ->when($keyword,function($query) use($keyword){
+
+            $query
+
+            ->where(
+                'nama',
+                'like',
+                "%$keyword%"
+            )
+
+            ->orWhere(
+                'nim',
+                'like',
+                "%$keyword%"
+            )
+
+            ->orWhere(
+                'email',
+                'like',
+                "%$keyword%"
+            )
+
+            ->orWhere(
+                'semester',
+                'like',
+                "%$keyword%"
+            )
+
+            ->orWhereHas(
+                'programStudi',
+                function($q)
+                use($keyword){
+
+                    $q->where(
+                        'nama_prodi',
+                        'like',
+                        "%$keyword%"
+                    );
+
+                }
+
+            );
+
+        })
+
+        ->get();
+
+
+        $programStudi =
+        ProgramStudi::all();
+
 
         return view(
             'admin.mahasiswa.index',
-            compact('mahasiswa')
+            compact(
+                'mahasiswa',
+                'programStudi'
+            )
         );
     }
+
 
 
     /*
@@ -36,6 +101,7 @@ class MahasiswaController extends Controller
     }
 
 
+
     /*
     |--------------------------------------------------------------------------
     | Tambah Data
@@ -44,20 +110,94 @@ class MahasiswaController extends Controller
 
     public function store(Request $request)
     {
-        Mahasiswa::create($request->all());
+        $request->validate([
+
+            'program_studi_id'
+            =>
+            'required',
+
+            'nim'
+            =>
+            'required|unique:mahasiswas',
+
+            'nama'
+            =>
+            'required',
+
+            'email'
+            =>
+            'required|email|unique:mahasiswas',
+
+            'semester'
+            =>
+            'required',
+
+            'status_akun'
+            =>
+            'required'
+
+        ]);
+
+
+        Mahasiswa::create([
+
+            'program_studi_id'
+            =>
+            $request->program_studi_id,
+
+            'nim'
+            =>
+            $request->nim,
+
+            'nama'
+            =>
+            $request->nama,
+
+            'alamat'
+            =>
+            'Belum diisi',
+
+            'email'
+            =>
+            $request->email,
+
+            'no_hp'
+            =>
+            '08123456789',
+
+            'password'
+            =>
+            Hash::make(
+                'password'
+            ),
+
+            'semester'
+            =>
+            $request->semester,
+
+            'status_akun'
+            =>
+            $request->status_akun
+
+        ]);
+
 
         return redirect(
             '/admin/mahasiswa'
-        )->with(
+        )
+
+        ->with(
             'success',
             'Data berhasil ditambah'
         );
     }
 
 
+
+
     /*
     |--------------------------------------------------------------------------
-    | Edit Data
+    | Update Data
     |--------------------------------------------------------------------------
     */
 
@@ -66,20 +206,49 @@ class MahasiswaController extends Controller
         $id
     )
     {
-        $mhs =
-        Mahasiswa::findOrFail($id);
 
-        $mhs->update(
-            $request->all()
+        $mhs =
+        Mahasiswa::findOrFail(
+            $id
         );
+
+
+        $mhs->update([
+
+            'program_studi_id'
+            =>
+            $request->program_studi_id,
+
+            'nama'
+            =>
+            $request->nama,
+
+            'email'
+            =>
+            $request->email,
+
+            'semester'
+            =>
+            $request->semester,
+
+            'status_akun'
+            =>
+            $request->status_akun
+
+        ]);
+
 
         return redirect(
             '/admin/mahasiswa'
-        )->with(
+        )
+
+        ->with(
             'success',
             'Data berhasil diupdate'
         );
     }
+
+
 
 
     /*
@@ -90,16 +259,148 @@ class MahasiswaController extends Controller
 
     public function destroy($id)
     {
+
         $mhs =
-        Mahasiswa::findOrFail($id);
+        Mahasiswa::findOrFail(
+            $id
+        );
 
         $mhs->delete();
 
+
         return redirect(
             '/admin/mahasiswa'
-        )->with(
+        )
+
+        ->with(
             'success',
             'Data berhasil dihapus'
         );
+
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Generate NIM Otomatis
+    |--------------------------------------------------------------------------
+    */
+
+    public function generateNim(
+        Request $request
+    )
+    {
+
+        $prodi =
+        ProgramStudi::find(
+            $request->program_studi_id
+        );
+
+
+        if(!$prodi){
+
+            return response()->json([
+
+                'nim'=>''
+
+            ]);
+
+        }
+
+
+
+        if(
+            $prodi->nama_prodi
+            ==
+            'Teknik Informatika'
+        ){
+
+            $prefix='TI';
+
+        }
+
+        elseif(
+            $prodi->nama_prodi
+            ==
+            'Ekonomi dan Bisnis'
+        ){
+
+            $prefix='EB';
+
+        }
+
+        else{
+
+            $prefix='KD';
+
+        }
+
+
+
+        $last =
+
+        Mahasiswa::where(
+
+            'program_studi_id',
+
+            $prodi->id
+
+        )
+
+        ->latest()
+
+        ->first();
+
+
+
+        if($last){
+
+            $angka=
+
+            (int)
+
+            substr(
+                $last->nim,
+                2
+            );
+
+            $angka++;
+
+        }
+
+        else{
+
+            $angka=1;
+
+        }
+
+
+
+        $nim=
+
+        $prefix .
+
+        str_pad(
+
+            $angka,
+
+            4,
+
+            '0',
+
+            STR_PAD_LEFT
+
+        );
+
+
+
+        return response()->json([
+
+            'nim'=>$nim
+
+        ]);
+
     }
 }
