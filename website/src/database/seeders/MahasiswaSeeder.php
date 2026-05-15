@@ -5,25 +5,44 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\ProgramStudi;
 
 class MahasiswaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $data = [];
 
-        // Teknik Informatika
-        for ($i = 1; $i <= 10; $i++) {
+        $ti = ProgramStudi::where('nama_prodi', 'Teknik Informatika')->first();
+        $eb = ProgramStudi::where('nama_prodi', 'Ekonomi dan Bisnis')->first();
+        $kd = ProgramStudi::where('nama_prodi', 'Kedokteran')->first();
+
+        // Teknik Informatika (cowok dominan)
+        $tiNama = [
+            'Rizky Pratama',
+            'Muhammad Fajar',
+            'Andi Saputra',
+            'Dimas Ramadhan',
+            'Rafi Maulana',
+            'Arif Hidayat',
+            'Bagas Nugroho',
+            'Ayu Lestari',
+            'Putri Amelia',
+            'Nadia Safitri'
+        ];
+
+        foreach ($tiNama as $i => $nama) {
+
+            $username = strtolower(explode(' ', $nama)[0]);
+            $random = rand(100,999);
+
             $data[] = [
-                'program_studi_id' => 1,
-                'nim' => 'TI00' . $i,
-                'nama' => 'Mahasiswa TI ' . $i,
-                'alamat' => 'Alamat TI ' . $i,
-                'email' => 'ti' . $i . '@gmail.com',
-                'no_hp' => '0812345600' . $i,
+                'program_studi_id' => $ti->id,
+                'nim' => 'TI00'.($i+1),
+                'nama' => $nama,
+                'alamat' => 'Jl. Informatika No '.($i+1),
+                'email' => $username.$random.'@gmail.com',
+                'no_hp' => '081234560'.($i+1),
                 'password' => Hash::make('password'),
                 'status_akun' => 'Aktif',
                 'created_at' => now(),
@@ -31,15 +50,32 @@ class MahasiswaSeeder extends Seeder
             ];
         }
 
-        // Ekonomi dan Bisnis
-        for ($i = 1; $i <= 10; $i++) {
+        // Ekonomi dan Bisnis (cewek dominan)
+        $ebNama = [
+            'Citra Maharani',
+            'Nabila Putri',
+            'Salsa Aulia',
+            'Amanda Putri',
+            'Indah Sari',
+            'Aisyah Rahma',
+            'Tiara Ayu',
+            'Budi Santoso',
+            'Kevin Wijaya',
+            'Rian Setiawan'
+        ];
+
+        foreach ($ebNama as $i => $nama) {
+
+            $username = strtolower(explode(' ', $nama)[0]);
+            $random = rand(100,999);
+
             $data[] = [
-                'program_studi_id' => 2,
-                'nim' => 'EB00' . $i,
-                'nama' => 'Mahasiswa EB ' . $i,
-                'alamat' => 'Alamat EB ' . $i,
-                'email' => 'eb' . $i . '@gmail.com',
-                'no_hp' => '0812345610' . $i,
+                'program_studi_id' => $eb->id,
+                'nim' => 'EB00'.($i+1),
+                'nama' => $nama,
+                'alamat' => 'Jl. Ekonomi No '.($i+1),
+                'email' => $username.$random.'@gmail.com',
+                'no_hp' => '081234561'.($i+1),
                 'password' => Hash::make('password'),
                 'status_akun' => 'Aktif',
                 'created_at' => now(),
@@ -47,15 +83,32 @@ class MahasiswaSeeder extends Seeder
             ];
         }
 
-        // Kedokteran
-        for ($i = 1; $i <= 10; $i++) {
+        // Kedokteran (balance)
+        $kdNama = [
+            'Daniel Christian',
+            'Rangga Prakoso',
+            'Yoga Prasetyo',
+            'Fikri Akbar',
+            'Reza Mahendra',
+            'Dewi Anggraini',
+            'Siti Nurhaliza',
+            'Anisa Putri',
+            'Maya Salsabila',
+            'Kartika Dewi'
+        ];
+
+        foreach ($kdNama as $i => $nama) {
+
+            $username = strtolower(explode(' ', $nama)[0]);
+            $random = rand(100,999);
+
             $data[] = [
-                'program_studi_id' => 3,
-                'nim' => 'KD00' . $i,
-                'nama' => 'Mahasiswa KD ' . $i,
-                'alamat' => 'Alamat KD ' . $i,
-                'email' => 'kd' . $i . '@gmail.com',
-                'no_hp' => '0812345620' . $i,
+                'program_studi_id' => $kd->id,
+                'nim' => 'KD00'.($i+1),
+                'nama' => $nama,
+                'alamat' => 'Jl. Kedokteran No '.($i+1),
+                'email' => $username.$random.'@gmail.com',
+                'no_hp' => '081234562'.($i+1),
                 'password' => Hash::make('password'),
                 'status_akun' => 'Aktif',
                 'created_at' => now(),

@@ -20,6 +20,14 @@
                 <p>Total Mahasiswa</p>
             </div>
 
+            <a href="/admin/mahasiswa"
+               class="small-box-footer">
+
+                Lihat Data
+                <i class="fas fa-arrow-circle-right"></i>
+
+            </a>
+
         </div>
 
     </div>
@@ -34,43 +42,69 @@
                 <p>Program Studi</p>
             </div>
 
+            <a href="/admin/program-studi"
+               class="small-box-footer">
+
+                Lihat Data
+                <i class="fas fa-arrow-circle-right"></i>
+
+            </a>
+
         </div>
 
     </div>
 
 </div>
 
+
 <!-- Menu Cepat -->
 <div class="card">
 
     <div class="card-header">
+
         <h3 class="card-title">
             Menu Admin
         </h3>
+
     </div>
 
     <div class="card-body">
 
-        <a href="/admin/mahasiswa"
-           class="btn btn-primary">
+        <div class="d-flex flex-wrap gap-2">
 
-            Data Mahasiswa
+            <a href="/admin/dashboard"
+               class="btn btn-dark">
 
-        </a>
+                <i class="fas fa-home"></i>
+                Dashboard
 
-        <a href="/admin/program-studi"
-           class="btn btn-success">
+            </a>
 
-            Program Studi
+            <a href="/admin/mahasiswa"
+               class="btn btn-primary">
 
-        </a>
+                <i class="fas fa-user-graduate"></i>
+                Data Mahasiswa
 
-        <a href="/logout"
-           class="btn btn-danger">
+            </a>
 
-            Logout
+            <a href="/admin/program-studi"
+               class="btn btn-success">
 
-        </a>
+                <i class="fas fa-book"></i>
+                Program Studi
+
+            </a>
+
+            <a href="/logout"
+               class="btn btn-danger">
+
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+
+            </a>
+
+        </div>
 
     </div>
 
