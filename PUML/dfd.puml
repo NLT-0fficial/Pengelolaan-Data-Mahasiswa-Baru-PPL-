@@ -1,33 +1,53 @@
 @startuml
-title DFD Sistem Pengelolaan Data Mahasiswa
+title DFD Level 0 - Sistem Pengelolaan Data Mahasiswa
 
-actor Admin
-actor Mahasiswa
+left to right direction
 
-rectangle "Sistem Informasi Akademik" {
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam backgroundColor white
 
-  usecase "Login" as Login
-  usecase "Kelola Data Mahasiswa" as Kelola
-  usecase "Cari Data" as Cari
-  usecase "Cetak Laporan" as Cetak
-  usecase "Lihat Informasi Akademik" as Lihat
+rectangle "Admin" as A
 
-}
+circle "1.0\nKelola Data\nMahasiswa" as P1
 
-database "Database" as DB
+database "Data Mahasiswa" as D1
+database "Program Studi" as D2
 
-Admin --> Login
-Admin --> Kelola
-Admin --> Cari
-Admin --> Cetak
+circle "2.0\nLihat Informasi\nAkademik" as P2
 
-Mahasiswa --> Login
-Mahasiswa --> Lihat
-Mahasiswa --> Cari
+rectangle "Mahasiswa" as M
 
-Kelola --> DB
-Cari --> DB
-Cetak --> DB
-Lihat --> DB
+
+' ===== Layout paksa =====
+
+A -[hidden]right- P1
+P1 -[hidden]right- D1
+D1 -[hidden]right- D2
+D1 -[hidden]down- P2
+P2 -[hidden]down- M
+
+
+' ===== Aliran Data =====
+
+A --> P1 : Data Login\nTambah/Edit/Hapus
+
+P1 --> A : Informasi Dashboard\nLaporan
+
+
+P1 --> D1 : Simpan/Ubah/Hapus
+D1 --> P1 : Data Mahasiswa
+
+
+P1 --> D2 : Ambil Data Prodi
+D2 --> P1 : Data Prodi
+
+
+P2 --> D1 : Ambil Data
+D1 --> P2 : Informasi Mahasiswa
+
+
+M --> P2 : Login
+P2 --> M : Informasi Akademik
 
 @enduml
