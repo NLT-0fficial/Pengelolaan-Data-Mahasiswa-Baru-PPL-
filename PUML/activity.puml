@@ -1,37 +1,33 @@
-@startuml Activity_Diagram
-title Activity Diagram - Registrasi Mahasiswa
+@startuml
 
 start
 
-:Mahasiswa membuka sistem;
+:Login;
 
-if (Sudah punya akun?) then (Tidak)
-  
-  :Pilih menu registrasi;
-  :Input biodata mahasiswa;
-  :Sistem validasi data;
-  
-  if (Data valid?) then (Ya)
-    :Simpan data ke database;
-    :Status akun = Pending;
-    :Tampilkan pesan berhasil registrasi;
-  else (Tidak)
-    :Tampilkan pesan error;
-  endif
+if (Login berhasil?) then (Ya)
 
-else (Ya)
+:Masuk Dashboard;
 
-  :Input username & password;
-  :Sistem validasi login;
+if (Pilih Menu?) then (Kelola Data)
 
-  if (Login berhasil?) then (Ya)
-    :Masuk dashboard mahasiswa;
-    :Lihat/Edit profil;
-  else (Tidak)
-    :Tampilkan pesan gagal login;
-  endif
+:Tambah/Edit/Hapus/Cari Data;
+
+:Simpan perubahan;
+
+else (Lihat Akademik)
+
+:Lihat Informasi Mahasiswa;
+
+endif
+
+:Logout;
+
+else (Tidak)
+
+:Tampilkan pesan gagal login;
 
 endif
 
 stop
+
 @enduml

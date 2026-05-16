@@ -1,24 +1,28 @@
-@startuml Sequence_Diagram
-title Sequence Diagram - Registrasi Mahasiswa Baru
+@startuml
 
-actor Mahasiswa
-participant "Form Registrasi" as Form
+actor Admin
 participant Sistem
 database Database
 
-Mahasiswa -> Form : Isi biodata registrasi
-Form -> Sistem : Kirim data registrasi
+Admin -> Sistem : Login
+Sistem -> Database : Verifikasi akun
+Database --> Sistem : Data valid
+Sistem --> Admin : Dashboard tampil
 
-Sistem -> Sistem : Validasi data
+Admin -> Sistem : Tambah mahasiswa
 
-alt Data valid
-    Sistem -> Database : Simpan data mahasiswa
-    Database --> Sistem : Data berhasil disimpan
-    Sistem --> Form : Registrasi berhasil
-    Form --> Mahasiswa : Tampilkan notifikasi berhasil
-else Data tidak valid
-    Sistem --> Form : Pesan error
-    Form --> Mahasiswa : Registrasi gagal
-end
+Sistem -> Database : Simpan data mahasiswa
+
+Database --> Sistem : Data berhasil disimpan
+
+Sistem --> Admin : Tampilkan data terbaru
+
+Admin -> Sistem : Edit/Hapus Data
+
+Sistem -> Database : Update/Delete data
+
+Database --> Sistem : Berhasil
+
+Sistem --> Admin : Data diperbarui
 
 @enduml

@@ -1,43 +1,39 @@
-@startuml Class_Diagram
-title Class Diagram - Sistem Pengelolaan Data Mahasiswa
+@startuml
 
-class Mahasiswa {
-  - nim : String
-  - nama : String
-  - alamat : String
-  - email : String
-  - noHp : String
-  - password : String
-  - statusAkun : String
+class User{
++id
++username
++password
++role
 
-  + registrasi()
-  + login()
-  + lihatProfil()
-  + editProfil()
++login()
++logout()
 }
 
-class Admin {
-  - idAdmin : int
-  - username : String
-  - password : String
-
-  + login()
-  + verifikasiMahasiswa()
-  + tambahData()
-  + editData()
-  + hapusData()
-  + cetakLaporan()
+class Admin{
++kelolaMahasiswa()
++cetakLaporan()
 }
 
-class ProgramStudi {
-  - idProdi : int
-  - namaProdi : String
-  - fakultas : String
+class Mahasiswa{
++nim
++nama
++email
++semester
++status
 
-  + tampilProdi()
++lihatInformasi()
 }
+
+class ProgramStudi{
++id
++kodeProdi
++namaProdi
+}
+
+User <|-- Admin
+User <|-- Mahasiswa
 
 ProgramStudi "1" -- "*" Mahasiswa
-Admin ..> Mahasiswa : mengelola
 
 @enduml

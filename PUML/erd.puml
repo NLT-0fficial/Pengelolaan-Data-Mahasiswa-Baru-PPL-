@@ -1,35 +1,33 @@
-@startuml ERD
-title ERD - Sistem Pengelolaan Data Mahasiswa
+@startuml
+title ERD Sistem Informasi Akademik
 
-entity Mahasiswa {
-  * nim : varchar
-  --
-  nama : varchar
-  jenis_kelamin : varchar
-  tanggal_lahir : date
-  alamat : text
-  no_hp : varchar
-  email : varchar
-  password : varchar
-  status_akun : varchar
-  id_prodi : int
+entity mahasiswa {
+   * id : bigint
+   --
+   nim : varchar
+   nama : varchar
+   email : varchar
+   semester : int
+   status : varchar
+   program_studi_id : bigint
 }
 
-entity Program_Studi {
-  * id_prodi : int
-  --
-  nama_prodi : varchar
-  fakultas : varchar
+entity program_studi {
+   * id : bigint
+   --
+   kode_prodi : varchar
+   nama_prodi : varchar
 }
 
-entity Admin {
-  * id_admin : int
-  --
-  username : varchar
-  password : varchar
-  nama_admin : varchar
+entity users {
+   * id : bigint
+   --
+   username : varchar
+   password : varchar
+   role : enum
 }
 
-Program_Studi ||--o{ Mahasiswa : memiliki
+program_studi ||--o{ mahasiswa
+users ||--o{ mahasiswa
 
 @enduml

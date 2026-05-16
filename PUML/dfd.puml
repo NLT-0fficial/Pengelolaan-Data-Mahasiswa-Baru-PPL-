@@ -1,20 +1,33 @@
-@startuml DFD_Level_0
-title DFD Level 0 - Sistem Pengelolaan Data Mahasiswa
+@startuml
+title DFD Sistem Pengelolaan Data Mahasiswa
 
-actor Mahasiswa
 actor Admin
+actor Mahasiswa
 
-rectangle "Sistem Pengelolaan\nData Mahasiswa" as Sistem
+rectangle "Sistem Informasi Akademik" {
 
-database "Database\nMahasiswa" as DB
+  usecase "Login" as Login
+  usecase "Kelola Data Mahasiswa" as Kelola
+  usecase "Cari Data" as Cari
+  usecase "Cetak Laporan" as Cetak
+  usecase "Lihat Informasi Akademik" as Lihat
 
-Mahasiswa --> Sistem : Registrasi,\nLogin,\nLihat Profil
-Sistem --> Mahasiswa : Informasi Akun,\nData Profil
+}
 
-Admin --> Sistem : Verifikasi Data,\nKelola Mahasiswa,\nCetak Laporan
-Sistem --> Admin : Laporan,\nData Mahasiswa
+database "Database" as DB
 
-Sistem --> DB : Simpan/Ubah Data
-DB --> Sistem : Data Mahasiswa
+Admin --> Login
+Admin --> Kelola
+Admin --> Cari
+Admin --> Cetak
+
+Mahasiswa --> Login
+Mahasiswa --> Lihat
+Mahasiswa --> Cari
+
+Kelola --> DB
+Cari --> DB
+Cetak --> DB
+Lihat --> DB
 
 @enduml

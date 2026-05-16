@@ -23,7 +23,7 @@ class MahasiswaController extends Controller
 
         $mahasiswa = Mahasiswa::with('programStudi')
 
-        ->when($keyword,function($query) use($keyword){
+        ->when($keyword, function($query) use($keyword){
 
             $query
 
@@ -310,7 +310,6 @@ class MahasiswaController extends Controller
         }
 
 
-
         if(
             $prodi->nama_prodi
             ==
@@ -338,7 +337,7 @@ class MahasiswaController extends Controller
         }
 
 
-
+        // FIX BUG NIM
         $last =
 
         Mahasiswa::where(
@@ -349,10 +348,23 @@ class MahasiswaController extends Controller
 
         )
 
-        ->latest()
+        ->where(
+
+            'nim',
+
+            'like',
+
+            $prefix.'%'
+
+        )
+
+        ->orderByRaw(
+
+            'CAST(SUBSTRING(nim,3) AS UNSIGNED) DESC'
+
+        )
 
         ->first();
-
 
 
         if($last){
@@ -377,7 +389,6 @@ class MahasiswaController extends Controller
         }
 
 
-
         $nim=
 
         $prefix .
@@ -393,7 +404,6 @@ class MahasiswaController extends Controller
             STR_PAD_LEFT
 
         );
-
 
 
         return response()->json([
